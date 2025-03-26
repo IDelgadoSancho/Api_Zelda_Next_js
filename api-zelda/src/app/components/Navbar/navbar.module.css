@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'triforce';
+    src: url('/fonts/Triforce.ttf');
+}
+
+.span {
+    font-family: triforce;
+    font-size: larger;
+    color: #FFD000;;
+    font-weight: bold;
+}
+
+.navbar {
+    background-color: #11458C;
+}
