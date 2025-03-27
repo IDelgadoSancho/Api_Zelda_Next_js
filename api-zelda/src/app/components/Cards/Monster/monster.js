@@ -1,13 +1,12 @@
-import css from './card.module.css';
+import css from './monster.module.css';
 
 export default function Card({ data }) {
     const {
         name,
         category,
         common_locations,
-        cooking_effect,
         description,
-        hearts_recovered,
+        drops,
         image,
     } = data;
 
@@ -23,12 +22,13 @@ export default function Card({ data }) {
                 <p className={`text-slate-600 leading-normal font-light mb-2 ${css.description}`}>
                     {description}
                 </p>
-                <p className={`text-slate-600 text-sm ${css.description}`}>
-                    <strong>Efecto al cocinar:</strong> {cooking_effect}
-                </p>
-                <p className={`text-slate-600 text-sm ${css.description}`}>
-                    <strong>Recuperación de corazones:</strong> {hearts_recovered}
-                </p>
+                
+                {drops && drops.length > 0 && (
+                    <p className={`text-slate-600 text-sm ${css.description}`}>
+                        <strong>Objetos que deja caer:</strong> {drops.join(", ")}
+                    </p>
+                )}
+                
                 {common_locations && common_locations.length > 0 && (
                     <p className={`text-slate-600 text-sm ${css.description}`}>
                         <strong>Ubicaciones comunes:</strong> {common_locations.join(", ")}
@@ -47,7 +47,6 @@ export default function Card({ data }) {
                     </button>
                 </div>
             </div>
-
         </div>
     );
 }

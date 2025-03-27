@@ -1,15 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import Card from '../components/Cards/Material/material';
+import Card from '../components/Cards/Monster/monster';
 
 export default function Page() {
-    const [materials, setMaterials] = useState([]);
+    const [monsters, setMonsters] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchMaterials() {
-            const endpoint = 'http://localhost:3001/materials';
+        async function fetchMonsters() {
+            const endpoint = 'http://localhost:3001/monsters';
 
             try {
                 const response = await fetch(endpoint);
@@ -19,29 +19,29 @@ export default function Page() {
                 }
 
                 const data = await response.json();
-                setMaterials(data);
+                setMonsters(data);
             } catch (err) {
                 console.error(err.message);
-                setMaterials([]);
+                setMonsters([]);
             } finally {
                 setLoading(false);
             }
         }
 
-        fetchMaterials();
+        fetchMonsters();
     }, []);
 
     if (loading) {
-        return <p>Cargando materiales...</p>;
+        return <p>Cargando mounstros...</p>;
     }
 
-    if (materials.length === 0) {
+    if (monsters.length === 0) {
         return (
 
             <>
                 <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
                     <p class="font-bold">Warning</p>
-                    <p>No se han encontrado materiales</p>
+                    <p>No se han encontrado mounstros</p>
                 </div>
             </>
 
@@ -51,10 +51,10 @@ export default function Page() {
     return (
 
         <>
-            <h1 className="text-2xl font-bold mb-4">Materials</h1>
+            <h1 className="text-2xl font-bold mb-4">Monsters</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {materials.map((material) => (
-                    <Card key={material._id} data={material} />
+                {monsters.map((monster) => (
+                    <Card key={monster._id} data={monster} />
                 ))}
             </div>
         </>
