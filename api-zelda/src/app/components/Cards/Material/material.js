@@ -1,10 +1,15 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import css from './material.module.css';
 import Modal from "@/app/components/Modals/Material/material";
+import Delete from "@/app/components/Modals/Delete/delete";
+import Link from 'next/link';
 
-
-export default function Card({ data }) {
+export default function Card({ data, onDelete }) {
     const [showModal, setShowModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const router = useRouter();
 
     const {
         name,
@@ -14,7 +19,38 @@ export default function Card({ data }) {
         description,
         hearts_recovered,
         image,
+        id_num,
+        _id
     } = data;
+
+    const handleDelete = async () => {
+        setIsDeleting(true);
+        
+        try {
+            const response = await fetch(`http://localhost:3001/materials/${_id || id_num}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al eliminar el material');
+            }
+
+            // Si se proporciona una función onDelete, la llamamos para actualizar la UI
+            if (onDelete) {
+                onDelete(_id || id_num);
+            } else {
+                // Si no hay función onDelete, redirigimos
+                router.refresh(); // Actualiza la página actual
+            }
+            
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Ocurrió un error al intentar eliminar el material');
+        } finally {
+            setIsDeleting(false);
+            setShowDeleteModal(false);
+        }
+    };
 
     return (
         <div className="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg w-96">
@@ -51,18 +87,34 @@ export default function Card({ data }) {
                 )}
             </div>
 
-            <div className='flex flex-row'>
+            <div className='flex flex-row justify-between'>
                 <div className="px-4 pb-4 pt-0 mt-2">
-                    <button className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-                        Editar
-                    </button>
+                    <Link href={`/materials/${encodeURIComponent(id_num)}`}>
+                        <button className="rounded-md bg-blue-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-none hover:bg-blue-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
+                            Editar material
+                        </button>
+                    </Link>
                 </div>
+
                 <div className="px-4 pb-4 pt-0 mt-2">
-                    <button className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-                        Eliminar
+                    <button 
+                        className="rounded-md bg-red-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg hover:bg-red-700 disabled:opacity-50" 
+                        type="button"
+                        onClick={() => setShowDeleteModal(true)}
+                        disabled={isDeleting}
+                    >
+                        {isDeleting ? 'Eliminando...' : 'Eliminar'}
                     </button>
                 </div>
             </div>
+
+            {/* Modal de confirmación de eliminación */}
+            <Delete
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                onConfirm={handleDelete}
+                itemName={name}
+            />
         </div>
     );
 }
