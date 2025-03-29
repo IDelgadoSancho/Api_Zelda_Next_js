@@ -20,14 +20,13 @@ export default function Card({ data, onDelete }) {
         hearts_recovered,
         image,
         id_num,
-        _id
     } = data;
 
     const handleDelete = async () => {
         setIsDeleting(true);
-        
+
         try {
-            const response = await fetch(`http://localhost:3001/materials/${_id || id_num}`, {
+            const response = await fetch(`http://localhost:3001/materials/${id_num}`, {
                 method: 'DELETE',
             });
 
@@ -37,12 +36,11 @@ export default function Card({ data, onDelete }) {
 
             // Si se proporciona una función onDelete, la llamamos para actualizar la UI
             if (onDelete) {
-                onDelete(_id || id_num);
-            } else {
-                // Si no hay función onDelete, redirigimos
-                router.refresh(); // Actualiza la página actual
+                onDelete(id_num);
             }
             
+            router.refresh();
+
         } catch (error) {
             console.error('Error:', error);
             alert('Ocurrió un error al intentar eliminar el material');
@@ -97,8 +95,8 @@ export default function Card({ data, onDelete }) {
                 </div>
 
                 <div className="px-4 pb-4 pt-0 mt-2">
-                    <button 
-                        className="rounded-md bg-red-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg hover:bg-red-700 disabled:opacity-50" 
+                    <button
+                        className="rounded-md bg-red-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg hover:bg-red-700 disabled:opacity-50"
                         type="button"
                         onClick={() => setShowDeleteModal(true)}
                         disabled={isDeleting}
@@ -108,7 +106,7 @@ export default function Card({ data, onDelete }) {
                 </div>
             </div>
 
-            {/* Modal de confirmación de eliminación */}
+            {/* modal de confirmación de eliminación */}
             <Delete
                 isOpen={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}

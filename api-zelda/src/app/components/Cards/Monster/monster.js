@@ -6,7 +6,6 @@ import Delete from "@/app/components/Modals/Delete/delete";
 import Link from 'next/link';
 
 export default function Card({ data }) {
-
     const [showModal, setShowModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -26,7 +25,7 @@ export default function Card({ data }) {
         setIsDeleting(true);
 
         try {
-            const response = await fetch(`http://localhost:3001/monsters/${_id || id_num}`, {
+            const response = await fetch(`http://localhost:3001/monsters/${id_num}`, {
                 method: 'DELETE',
             });
 
@@ -36,11 +35,10 @@ export default function Card({ data }) {
 
             // Si se proporciona una función onDelete, la llamamos para actualizar la UI
             if (onDelete) {
-                onDelete(_id || id_num);
-            } else {
-                // Si no hay función onDelete, redirigimos
-                router.refresh(); // Actualiza la página actual
+                onDelete(id_num);
             }
+
+            router.refresh();
 
         } catch (error) {
             console.error('Error:', error);

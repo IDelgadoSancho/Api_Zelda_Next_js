@@ -5,8 +5,8 @@ export default function RootLayout({ children }) {
   return (
 
     <>
-      <html lang="en">
-        <body>
+      <html lang='en' suppressHydrationWarning>
+        <body suppressHydrationWarning>
           <div className="flex min-h-screen">
             <Navbar />
             <main className="flex-1 ml-30 p-4 overflow-y-auto">
@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
           </div>
         </body>
       </html>
-      
+
     </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Card from '../components/Cards/Monster/monster';
+import Link from 'next/link';
 
 export default function Page() {
     const [monsters, setMonsters] = useState([]);
@@ -39,8 +40,8 @@ export default function Page() {
         return (
 
             <>
-                <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
-                    <p class="font-bold">Warning</p>
+                <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
+                    <p className="font-bold">Warning</p>
                     <p>No se han encontrado mounstros</p>
                 </div>
             </>
@@ -56,6 +57,18 @@ export default function Page() {
                 {monsters.map((monster) => (
                     <Card key={monster._id} data={monster} />
                 ))}
+
+                {/**link de creacion de un nuevo monstruo */}
+                                <Link href="/monsters/create" className="block">
+                                    <div className="relative flex flex-col my-6 bg-pink-400 hover:bg-pink-500 shadow-sm border border-slate-200 rounded-lg w-96 h-[534] cursor-pointer hover:shadow-lg transition-shadow duration-300">
+                                        <div className='flex justify-center items-center rounded-lg h-full w-full'>
+                                            <div className="text-center">
+                                                <img src='/add.svg' className="object-cover w-auto h-20 mx-auto" alt="Añadir material" />
+                                                <p className="text-white font-semibold mt-3">Añadir nuevo monstruo</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
             </div>
         </>
 

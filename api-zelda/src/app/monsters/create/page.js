@@ -1,61 +1,25 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function EditMonsterPage({ params }) {
-    const router = useRouter();
-    const [monster, setMonster] = useState(null);
-    const [loading, setLoading] = useState(true);
+export default function CreateMonster() {
     const [formData, setFormData] = useState({
         name: '',
-        category: 'monsters',
         description: '',
+        image: '',
         drops: [],
-        common_locations: [],
+        id_num: '',
+        category: 'monsters',
+        common_locations: []
     });
+
     const [newLocation, setNewLocation] = useState('');
     const [newDrop, setNewDrop] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState(null);
+    const router = useRouter();
 
-    // obtener la id
-    const { id } = params;
-
-    useEffect(() => {
-        async function fetchMonster() {
-            try {
-                const response = await fetch(`http://localhost:3001/monsters/${id}`);
-                if (!response.ok) {
-                    throw new Error('No se pudo cargar el monstruo');
-                }
-
-                const data = await response.json();
-                setMonster(data);
-                setFormData({
-                    name: data.name || '',
-                    category: data.category || '',
-                    description: data.description || '',
-                    drops: data.drops || [],
-                    common_locations: data.common_locations || [],
-                });
-            } catch (error) {
-                console.error('Error:', error);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchMonster();
-    }, [id]);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    // Manejo de ubicaciones
     const handleAddLocation = () => {
         if (newLocation.trim()) {
             setFormData(prev => ({
@@ -73,7 +37,6 @@ export default function EditMonsterPage({ params }) {
         }));
     };
 
-    // Manejo de drops (objetos que deja caer)
     const handleAddDrop = () => {
         if (newDrop.trim()) {
             setFormData(prev => ({
@@ -91,98 +54,137 @@ export default function EditMonsterPage({ params }) {
         }));
     };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
+        setError(null);
 
         try {
-            const response = await fetch(`http://localhost:3001/monsters/${id}`, {
-                method: 'PUT',
+            // Validaciones básicas
+            if (!formData.name.trim()) {
+                throw new Error('El nombre es obligatorio');
+            }
+            
+            if (!formData.id_num.trim()) {
+                throw new Error('El ID numérico es obligatorio');
+            }
+            
+            console.log('Enviando datos:', formData);
+
+            const response = await fetch('http://localhost:3001/monsters', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             });
 
-            if (!response.ok) {
-                throw new Error('No se pudo actualizar el monstruo');
+            const responseText = await response.text();
+            console.log('Respuesta del servidor (texto):', responseText);
+            
+            let responseData;
+            try {
+                responseData = JSON.parse(responseText);
+                console.log('Respuesta del servidor (JSON):', responseData);
+            } catch (e) {
+                console.log('La respuesta no es JSON válido');
             }
 
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${responseData?.error?.message || responseData?.message || 'Error desconocido'}`);
+            }
+
+            // Éxito - navegar de vuelta a la lista
             router.push('/monsters');
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error completo:', error);
+            setError(error.message);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
-    if (loading) {
-        return <div className="p-4">Cargando...</div>;
-    }
-
-    if (!monster) {
-        return <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
-            <p className="font-bold">Warning</p>
-            <p>No se ha encontrado el monstruo</p>
-        </div>
-    }
-
     return (
-        <div className="max-w-4xl mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-6">Editar Monstruo: {monster.name}</h1>
+        <div className="max-w-2xl mx-auto p-4">
+            <h1 className="text-2xl font-bold mb-6">Crear Nuevo Monstruo</h1>
+            
+            {error && (
+                <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+                    <p className="font-bold">Error</p>
+                    <p>{error}</p>
+                </div>
+            )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* imagen del monstruo */}
-                    <div className="mb-6">
-                        <div className="h-64 rounded-lg overflow-hidden border border-gray-200">
-                            <img
-                                src={monster.image}
-                                alt={`${monster.name} image`}
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="space-y-4">
-                        {/* input de nombre */}
-                        <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre</label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                required
-                            />
-                        </div>
-
-                        {/* input Categoría */}
-                        <div>
-                            <label htmlFor="category" className="block text-sm font-medium text-gray-700">Categoría</label>
-                            <input
-                                type="text"
-                                id="category"
-                                name="category"
-                                value={formData.category}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                required
-                                disabled
-                            />
-                        </div>
-                    </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                    <label htmlFor="id_num" className="block text-sm font-medium">ID Numérico</label>
+                    <input
+                        type="text"
+                        id="id_num"
+                        name="id_num"
+                        value={formData.id_num}
+                        onChange={handleChange}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                        required
+                    />
                 </div>
 
-                {/* input Descripción */}
                 <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">Descripción</label>
+                    <label htmlFor="name" className="block text-sm font-medium">Nombre</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="category" className="block text-sm font-medium">Categoría</label>
+                    <input
+                        type="text"
+                        id="category"
+                        name="category"
+                        value={formData.category}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                        required
+                        disabled
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="description" className="block text-sm font-medium">Descripción</label>
                     <textarea
                         id="description"
                         name="description"
-                        rows={4}
                         value={formData.description}
                         onChange={handleChange}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        rows="3"
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                         required
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="image" className="block text-sm font-medium">URL de la imagen</label>
+                    <input
+                        type="text"
+                        id="image"
+                        name="image"
+                        value={formData.image}
+                        onChange={handleChange}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                     />
                 </div>
 
@@ -258,18 +260,19 @@ export default function EditMonsterPage({ params }) {
                     </div>
                 </div>
 
-                {/* input Botones de acción */}
-                <div className="flex space-x-4">
+                <div className="flex gap-4">
                     <button
                         type="submit"
-                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        disabled={isSubmitting}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     >
-                        Guardar cambios
+                        {isSubmitting ? 'Guardando...' : 'Guardar Monstruo'}
                     </button>
+
                     <button
                         type="button"
                         onClick={() => router.push('/monsters')}
-                        className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
                     >
                         Cancelar
                     </button>
