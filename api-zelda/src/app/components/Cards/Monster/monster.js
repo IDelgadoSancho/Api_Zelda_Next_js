@@ -5,7 +5,7 @@ import Modal from "@/app/components/Modals/Monster/monster";
 import Delete from "@/app/components/Modals/Delete/delete";
 import Link from 'next/link';
 
-export default function Card({ data }) {
+export default function Card({ data, onDelete }) {
     const [showModal, setShowModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -50,7 +50,7 @@ export default function Card({ data }) {
     };
 
     return (
-        <div className="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg w-96">
+        <div className={`relative flex flex-col my-6 shadow-sm border-3 rounded-lg w-96 ${css.card}`}>
             <div className="relative h-56 m-2.5 overflow-hidden text-white rounded-md">
                 {/* evento para lanzar el modal al hacer clic en la imagen */}
                 <div
@@ -62,40 +62,41 @@ export default function Card({ data }) {
 
                 {/* mostrar el modal */}
                 {showModal && <Modal data={data} onClose={() => setShowModal(false)} />}
-
             </div>
-            <div className="p-4">
-                <h6 className="mb-2 text-slate-800 text-xl font-semibold">
-                    {name} ({category})
+
+            <div className="p-4" id="editar">
+                <h6 className="mb-2 text-xl font-semibold">
+                    {name.toUpperCase()}
                 </h6>
-                <p className={`text-slate-600 leading-normal font-light mb-2 ${css.description}`}>
+                <p className={`leading-normal font-light mb-2 ${css.description}`}>
                     {description}
                 </p>
 
                 {drops && drops.length > 0 && (
-                    <p className={`text-slate-600 text-sm ${css.description}`}>
+                    <p className={`text-sm ${css.description}`}>
                         <strong>Objetos que deja caer:</strong> {drops.join(", ")}
                     </p>
                 )}
 
                 {common_locations && common_locations.length > 0 && (
-                    <p className={`text-slate-600 text-sm ${css.description}`}>
+                    <p className={`text-sm ${css.description}`}>
                         <strong>Ubicaciones comunes:</strong> {common_locations.join(", ")}
                     </p>
                 )}
             </div>
-            <div className='flex flex-row'>
+            
+            <div className='flex flex-row justify-between'>
                 <div className="px-4 pb-4 pt-0 mt-2">
                     <Link href={`/monsters/${encodeURIComponent(id_num)}`}>
-                        <button className="rounded-md bg-blue-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-none hover:bg-blue-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-                            Editar monster
+                        <button id={css.editar} className="rounded-md py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:shadow-none active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
+                            Editar monstruo
                         </button>
                     </Link>
                 </div>
 
                 <div className="px-4 pb-4 pt-0 mt-2">
-                    <button
-                        className="rounded-md bg-red-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg hover:bg-red-700 disabled:opacity-50"
+                    <button id={css.delete}
+                        className="rounded-md py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg disabled:opacity-50"
                         type="button"
                         onClick={() => setShowDeleteModal(true)}
                         disabled={isDeleting}

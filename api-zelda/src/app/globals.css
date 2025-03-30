@@ -5,6 +5,18 @@
     src: url('/fonts/The Wild Breath of Zelda.otf');
 }
 
-/* body {
+body {
+
+    background: linear-gradient(45deg,
+            #9E8861 20%, #AD976E 20%,
+            #9E8861 40%, #AD976E 40%,
+            #9E8861 60%, #AD976E 60%,
+            #9E8861 80%, #AD976E 80%);
+}
+
+h1 {
+    font-size: 30px;
     font-family: zelda;
-} */
+    margin-bottom: 10px;
+    text-align: center;
+}

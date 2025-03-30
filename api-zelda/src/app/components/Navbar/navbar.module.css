@@ -6,10 +6,28 @@
 .span {
     font-family: triforce;
     font-size: larger;
-    color: #FFD000;;
+    color: #FFD000;
     font-weight: bold;
 }
 
-.navbar {
-    background-color: #11458C;
+.navbarHeader {
+    background: linear-gradient(to bottom, #11458C, #2A201F);
 }
+
+.navbarMain {
+    background-color: #2A201F;
+}
+
+.navbarFooter {
+    opacity: 20%;
+
+    img {
+        filter: invert(59%) sepia(81%) saturate(357%) hue-rotate(2deg) brightness(92%) contrast(89%);
+    }
+}
+
+/* .navbarBorder {
+    border-top: 2px solid #CE9C39;
+    border-right: 3px solid #CE9C39;
+    border-bottom: 2px solid #CE9C39;
+} */

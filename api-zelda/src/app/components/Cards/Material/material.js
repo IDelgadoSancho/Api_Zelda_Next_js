@@ -38,7 +38,7 @@ export default function Card({ data, onDelete }) {
             if (onDelete) {
                 onDelete(id_num);
             }
-            
+
             router.refresh();
 
         } catch (error) {
@@ -51,7 +51,7 @@ export default function Card({ data, onDelete }) {
     };
 
     return (
-        <div className="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg w-96">
+        <div className={`relative flex flex-col my-6 shadow-sm border-3 rounded-lg w-96 ${css.card}`}>
             <div className="relative h-56 m-2.5 overflow-hidden text-white rounded-md">
                 {/* evento para lanzar el modal al hacer clic en la imagen */}
                 <div
@@ -65,38 +65,59 @@ export default function Card({ data, onDelete }) {
                 {showModal && <Modal data={data} onClose={() => setShowModal(false)} />}
             </div>
 
-            <div className="p-4">
-                <h6 className="mb-2 text-slate-800 text-xl font-semibold">
-                    {name} ({category})
+            <div className="p-4" id="editar">
+                <h6 className="mb-2 text-xl font-semibold">
+                    {name.toUpperCase()}
                 </h6>
-                <p className={`text-slate-600 leading-normal font-light mb-2 ${css.description}`}>
+                <p className={`leading-normal font-light mb-2 ${css.description}`}>
                     {description}
                 </p>
-                <p className={`text-slate-600 text-sm ${css.description}`}>
+                <p className={`text-sm ${css.description}`}>
                     <strong>Efecto al cocinar:</strong> {cooking_effect}
                 </p>
-                <p className={`text-slate-600 text-sm ${css.description}`}>
-                    <strong>Recuperación de corazones:</strong> {hearts_recovered}
+                <p className={`text-sm ${css.description}`}>
+                    <strong>Recuperación de corazones:</strong>
+                    {hearts_recovered > 0 && (
+                        <p className="flex">
+                            {[...Array(Math.floor(hearts_recovered))].map((_, i) => (
+                                <span key={i} className="text-red-500">
+                                    <img src="/heart.png" className="w-8 h-auto" alt="hearts" />
+                                </span>
+                            ))}
+                            {hearts_recovered % 1 !== 0 && (
+                                <span className="text-red-500">
+                                    <img src="/half-heart.png" className="w-8 h-auto" alt="hearts" />
+                                </span>
+                            )}
+                        </p>
+                    )}
+                    {hearts_recovered <= 0 && (
+                        <p className="flex">
+                            <span className="text-red-500 mt-1 mb-1">No recupera</span>
+                        </p>
+                    )}
                 </p>
-                {common_locations && common_locations.length > 0 && (
-                    <p className={`text-slate-600 text-sm ${css.description}`}>
-                        <strong>Ubicaciones comunes:</strong> {common_locations.join(", ")}
-                    </p>
-                )}
-            </div>
+                {
+                    common_locations && common_locations.length > 0 && (
+                        <p className={`text-sm ${css.description}`}>
+                            <strong>Ubicaciones comunes:</strong> {common_locations.join(", ")}
+                        </p>
+                    )
+                }
+            </div >
 
             <div className='flex flex-row justify-between'>
                 <div className="px-4 pb-4 pt-0 mt-2">
                     <Link href={`/materials/${encodeURIComponent(id_num)}`}>
-                        <button className="rounded-md bg-blue-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-none hover:bg-blue-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
+                        <button id={css.editar} className="rounded-md py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-none hover:bg-blue-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
                             Editar material
                         </button>
                     </Link>
                 </div>
 
                 <div className="px-4 pb-4 pt-0 mt-2">
-                    <button
-                        className="rounded-md bg-red-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg hover:bg-red-700 disabled:opacity-50"
+                    <button id={css.delete}
+                        className="rounded-md py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg hover:bg-red-700 disabled:opacity-50"
                         type="button"
                         onClick={() => setShowDeleteModal(true)}
                         disabled={isDeleting}
@@ -113,6 +134,6 @@ export default function Card({ data, onDelete }) {
                 onConfirm={handleDelete}
                 itemName={name}
             />
-        </div>
+        </div >
     );
 }

@@ -1,0 +1,21 @@
+.newItem {
+    background-color: #CE9C39;
+    border-color: #2A201F;
+
+    p {
+        color: #2A201F;
+    }
+
+    img{
+        filter: invert(55%) sepia(5%) saturate(5578%) hue-rotate(1deg) brightness(83%) contrast(77%);
+        opacity: 20%;
+    }
+}
+
+.newItem:hover {
+    background-color: #ac8230;
+    
+    img{
+        filter: invert(6%) sepia(7%) saturate(2855%) hue-rotate(318deg) brightness(103%) contrast(83%);
+    }
+}

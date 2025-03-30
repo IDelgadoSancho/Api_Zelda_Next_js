@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react';
+import css from './materials.module.css';
 import Card from '../components/Cards/Material/material';
 import Link from 'next/link';
+import '../globals.css';
 
 export default function Page() {
     const [materials, setMaterials] = useState([]);
@@ -52,18 +54,18 @@ export default function Page() {
     return (
 
         <>
-            <h1 className="text-2xl font-bold mb-4">Materials</h1>
+            <h1>MATERIALES</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {materials.map((material) => (
                     <Card key={material._id} data={material} />
                 ))}
 
                 {/**link de creacion de un nuevo objeto */}
-                <Link href="/materials/create" className="block">
-                    <div className="relative flex flex-col my-6 bg-pink-400 hover:bg-pink-500 shadow-sm border border-slate-200 rounded-lg w-96 h-[534] cursor-pointer hover:shadow-lg transition-shadow duration-300">
+                <Link href="/materials/create">
+                    <div className={`relative flex flex-col my-6 shadow-sm border-3 rounded-lg w-96 h-[571.5] cursor-pointer hover:shadow-lg transition-shadow duration-300 ${css.newItem}`}>
                         <div className='flex justify-center items-center rounded-lg h-full w-full'>
                             <div className="text-center">
-                                <img src='/add.svg' className="object-cover w-auto h-20 mx-auto" alt="Añadir material" />
+                                <img src='/triforce.svg' className="object-cover w-auto h-fill mx-auto" alt="Añadir material" />
                                 <p className="text-white font-semibold mt-3">Añadir nuevo material</p>
                             </div>
                         </div>

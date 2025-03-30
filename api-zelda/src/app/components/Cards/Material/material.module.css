@@ -7,3 +7,31 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+
+
+.card{
+    background-color: #2A201F;
+    border-color: #CE9C39;
+    color: #CE9C39;
+
+    p{
+        color:#b8a070;
+    }
+}
+
+#editar{
+    background-color: #11458C;
+}
+
+#editar:hover{
+    background-color: #11448ca6;
+}
+
+#delete{
+    background-color: #CC0914;
+}
+
+#delete:hover{
+    background-color: #cc0913b4;
+}
