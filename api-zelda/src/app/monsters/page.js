@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Card from '../components/Cards/Monster/monster';
 import Link from 'next/link';
 import css from './monsters.module.css';
+import Alert from '../components/Alert/alert';
+
 import '../globals.css';
 
 export default function Page() {
@@ -35,20 +37,11 @@ export default function Page() {
     }, []);
 
     if (loading) {
-        return <p>Cargando mounstros...</p>;
+        return <Alert isLoading={true} />;
     }
 
     if (monsters.length === 0) {
-        return (
-
-            <>
-                <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
-                    <p className="font-bold">Warning</p>
-                    <p>No se han encontrado mounstros</p>
-                </div>
-            </>
-
-        )
+        return <Alert isEmpty={true} />;
     }
 
     return (

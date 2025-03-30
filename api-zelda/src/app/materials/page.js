@@ -4,9 +4,14 @@ import { useEffect, useState } from 'react';
 import css from './materials.module.css';
 import Card from '../components/Cards/Material/material';
 import Link from 'next/link';
+import Alert from '../components/Alert/alert';
 import '../globals.css';
 
+
 export default function Page() {
+
+    // return <Alert isLoading={true} />; // probar mensaje loading
+
     const [materials, setMaterials] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -35,20 +40,11 @@ export default function Page() {
     }, []);
 
     if (loading) {
-        return <p>Cargando materiales...</p>;
+        return <Alert isLoading={true} />;
     }
 
     if (materials.length === 0) {
-        return (
-
-            <>
-                <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
-                    <p className="font-bold">Warning</p>
-                    <p>No se han encontrado materiales</p>
-                </div>
-            </>
-
-        )
+        return <Alert isEmpty={true} />;
     }
 
     return (

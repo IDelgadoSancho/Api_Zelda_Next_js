@@ -75,10 +75,10 @@ export default function Card({ data, onDelete }) {
                 <p className={`text-sm ${css.description}`}>
                     <strong>Efecto al cocinar:</strong> {cooking_effect}
                 </p>
-                <p className={`text-sm ${css.description}`}>
+                <div className={`text-sm ${css.description}`}>
                     <strong>Recuperación de corazones:</strong>
                     {hearts_recovered > 0 && (
-                        <p className="flex">
+                        <div className="flex">
                             {[...Array(Math.floor(hearts_recovered))].map((_, i) => (
                                 <span key={i} className="text-red-500">
                                     <img src="/heart.png" className="w-8 h-auto" alt="hearts" />
@@ -89,14 +89,14 @@ export default function Card({ data, onDelete }) {
                                     <img src="/half-heart.png" className="w-8 h-auto" alt="hearts" />
                                 </span>
                             )}
-                        </p>
+                        </div>
                     )}
                     {hearts_recovered <= 0 && (
-                        <p className="flex">
+                        <div className="flex">
                             <span className="text-red-500 mt-1 mb-1">No recupera</span>
-                        </p>
+                        </div>
                     )}
-                </p>
+                </div>
                 {
                     common_locations && common_locations.length > 0 && (
                         <p className={`text-sm ${css.description}`}>

@@ -58,23 +58,9 @@ export default function Navbar() {
               <span className="text-xl font-medium">WEBSOCKET</span>
             </Link>
           </li>
-
-          <li>
-            <Link href="/test"
-              className="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-white hover:text-[#FFD000]"
-            >
-              <span className="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
-                <i className="bx bx-bell" />
-              </span>
-              <span className="text-xl font-medium">TEST</span>
-              <span className="ml-auto mr-6 text-sm bg-red-100 rounded-full px-3 py-px text-red-500">
-                5
-              </span>
-            </Link>
-          </li>
         </ul>
 
-        <div className={`${css.navbarFooter}`}>
+        <div className={`${css.navbarFooter} mt-10`}>
           <img src="/sword-altar.svg" className={`h-auto w-50`} />
         </div>
       </nav>
