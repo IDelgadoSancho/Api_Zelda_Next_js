@@ -1,11 +1,17 @@
 export default function Page() {
   return (
     <>
-      <div className="flex justify-start w-full z-10 relative pt-2 pl-40">
+      <div className="flex flex-col items-center w-full z-10 relative pt-2">
         <img 
           src="Zelda_flat.svg" 
           alt="Zelda Logo" 
-          className="max-w-full h-auto fade-in-logo"
+          className="max-w-full h-auto fade-in-logo mb-4"
+        />
+
+        <img 
+          src="/press_start.gif"
+          alt="Press Start"
+          
         />
       </div>
       
