@@ -11,7 +11,10 @@
 }
 
 .navbarHeader {
-    background: linear-gradient(to bottom, #11458C, #2A201F);
+    background: linear-gradient(to bottom, #11458C, #0d3163);
+    /* background-color: #0d3163; */
+    border-bottom: 2px solid #E9920B;
+
 }
 
 .navbarMain {
