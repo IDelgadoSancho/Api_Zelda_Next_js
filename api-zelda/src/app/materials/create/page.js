@@ -3,6 +3,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+/**
+ * Componente para crear un nuevo material en la base de datos.
+ * Proporciona un formulario completo con validación, gestión de estados y manejo de errores.
+ * Incluye campos para la información básica del material, recuperación de corazones,
+ * efectos al cocinar y ubicaciones.
+ * 
+ * @component
+ * @return {JSX.Element} Formulario para la creación de un nuevo material
+ */
 export default function CreateMaterial() {
     const [formData, setFormData] = useState({
         name: '',
@@ -20,6 +29,13 @@ export default function CreateMaterial() {
     const [error, setError] = useState(null);
     const router = useRouter();
 
+    /**
+     * Añade una nueva ubicación a la lista de ubicaciones comunes del material.
+     * Solo se añade si el texto no está vacío después de eliminar espacios en blanco.
+     * 
+     * @function
+     * @return {void}
+     */
     const handleAddLocation = () => {
         if (newLocation.trim()) {
             setFormData(prev => ({
@@ -30,6 +46,13 @@ export default function CreateMaterial() {
         }
     };
 
+    /**
+     * Elimina una ubicación específica de la lista de ubicaciones comunes.
+     * 
+     * @function
+     * @param {number} index - Índice de la ubicación a eliminar
+     * @return {void}
+     */
     const handleRemoveLocation = (index) => {
         setFormData(prev => ({
             ...prev,
@@ -37,6 +60,14 @@ export default function CreateMaterial() {
         }));
     };
 
+    /**
+     * Actualiza el estado del formulario cuando cambian los valores de los campos.
+     * Utiliza el nombre del campo como clave para actualizar la propiedad correspondiente.
+     * 
+     * @function
+     * @param {React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>} e - Evento de cambio del campo
+     * @return {void}
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -45,6 +76,17 @@ export default function CreateMaterial() {
         }));
     };
 
+    /**
+     * Gestiona el envío del formulario para crear un nuevo material.
+     * Valida los datos obligatorios, realiza la petición a la API y maneja los errores.
+     * En caso de éxito, redirige al usuario a la lista de materiales.
+     * 
+     * @function
+     * @async
+     * @param {React.FormEvent<HTMLFormElement>} e - Evento de envío del formulario
+     * @return {Promise<void>}
+     * @throws {Error} Si faltan datos obligatorios o la respuesta del servidor no es exitosa
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);

@@ -5,6 +5,25 @@ import Modal from "@/app/components/Modals/Material/material";
 import Delete from "@/app/components/Modals/Delete/delete";
 import Link from 'next/link';
 
+/**
+ * Componente para mostrar la información de un material en forma de tarjeta.
+ * Permite visualizar detalles, editar y eliminar un material.
+ * Incluye un modal para ver información detallada y otro para confirmar eliminación.
+ * 
+ * @component
+ * @param {Object} props - Propiedades del componente
+ * @param {Object} props.data - Datos del material a mostrar
+ * @param {string} props.data.name - Nombre del material
+ * @param {string} props.data.category - Categoría del material
+ * @param {Array<string>} props.data.common_locations - Ubicaciones donde se encuentra el material
+ * @param {string} props.data.cooking_effect - Efecto que produce al ser cocinado
+ * @param {string} props.data.description - Descripción detallada del material
+ * @param {number} props.data.hearts_recovered - Cantidad de corazones que recupera
+ * @param {string} props.data.image - URL de la imagen del material
+ * @param {string} props.data.id_num - Identificador único del material
+ * @param {Function} [props.onDelete] - Función callback a ejecutar cuando se elimina el material
+ * @return {JSX.Element} Tarjeta con información del material
+ */
 export default function Card({ data, onDelete }) {
     const [showModal, setShowModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -22,6 +41,16 @@ export default function Card({ data, onDelete }) {
         id_num,
     } = data;
 
+    /**
+     * Maneja la eliminación de un material mediante una petición a la API.
+     * Actualiza la interfaz de usuario después de la eliminación si es exitosa.
+     * Notifica errores y gestiona los estados de carga durante el proceso.
+     * 
+     * @async
+     * @function
+     * @throws {Error} Si la respuesta de la API no es exitosa
+     * @return {Promise<void>}
+     */
     const handleDelete = async () => {
         setIsDeleting(true);
 

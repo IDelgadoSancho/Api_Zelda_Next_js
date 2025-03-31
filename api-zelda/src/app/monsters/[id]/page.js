@@ -1,5 +1,15 @@
 'use client';
 
+/**
+ * Componente para editar un monstruo existente en la base de datos.
+ * Permite modificar nombre, descripción, objetos que deja caer y ubicaciones del monstruo.
+ * 
+ * @component
+ * @param {Object} props - Propiedades del componente
+ * @param {Object} props.params - Parámetros de la ruta
+ * @param {string} props.params.id - Identificador del monstruo a editar
+ * @return {JSX.Element} Formulario de edición de monstruo o mensajes de estado
+ */
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -20,6 +30,13 @@ export default function EditMonsterPage({ params }) {
     // obtener la id
     const { id } = params;
 
+    /**
+     * Obtiene los datos del monstruo desde la API cuando el componente se monta.
+     * 
+     * @function
+     * @async
+     * @throws {Error} Si no se puede cargar la información del monstruo
+     */
     useEffect(() => {
         async function fetchMonster() {
             try {
@@ -47,6 +64,12 @@ export default function EditMonsterPage({ params }) {
         fetchMonster();
     }, [id]);
 
+    /**
+     * Actualiza el estado del formulario cuando cambian los valores de los campos.
+     * 
+     * @function
+     * @param {React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>} e - Evento de cambio del campo
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -55,7 +78,12 @@ export default function EditMonsterPage({ params }) {
         }));
     };
 
-    // Manejo de ubicaciones
+    /**
+     * Añade una nueva ubicación a la lista de ubicaciones comunes del monstruo.
+     * Verifica que el texto no esté vacío y limpia los espacios en blanco.
+     * 
+     * @function
+     */
     const handleAddLocation = () => {
         if (newLocation.trim()) {
             setFormData(prev => ({
@@ -66,6 +94,12 @@ export default function EditMonsterPage({ params }) {
         }
     };
 
+    /**
+     * Elimina una ubicación específica de la lista de ubicaciones comunes.
+     * 
+     * @function
+     * @param {number} index - Índice de la ubicación a eliminar
+     */
     const handleRemoveLocation = (index) => {
         setFormData(prev => ({
             ...prev,
@@ -73,7 +107,12 @@ export default function EditMonsterPage({ params }) {
         }));
     };
 
-    // Manejo de drops (objetos que deja caer)
+    /**
+     * Añade un nuevo objeto a la lista de objetos que deja caer el monstruo.
+     * Verifica que el texto no esté vacío y limpia los espacios en blanco.
+     * 
+     * @function
+     */
     const handleAddDrop = () => {
         if (newDrop.trim()) {
             setFormData(prev => ({
@@ -84,6 +123,12 @@ export default function EditMonsterPage({ params }) {
         }
     };
 
+    /**
+     * Elimina un objeto específico de la lista de objetos que deja caer el monstruo.
+     * 
+     * @function
+     * @param {number} index - Índice del objeto a eliminar
+     */
     const handleRemoveDrop = (index) => {
         setFormData(prev => ({
             ...prev,
@@ -91,6 +136,15 @@ export default function EditMonsterPage({ params }) {
         }));
     };
 
+    /**
+     * Maneja el envío del formulario, actualizando los datos del monstruo en la API.
+     * En caso de éxito, redirige al usuario a la lista de monstruos.
+     * 
+     * @function
+     * @async
+     * @param {React.FormEvent<HTMLFormElement>} e - Evento de envío del formulario
+     * @throws {Error} Si no se puede actualizar el monstruo en la API
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
 

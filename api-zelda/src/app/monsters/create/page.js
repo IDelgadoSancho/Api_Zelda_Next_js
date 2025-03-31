@@ -3,6 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+/**
+ * Componente para crear un nuevo registro de monstruo en la base de datos.
+ * Proporciona un formulario completo con validación y manejo de estados.
+ * 
+ * @component
+ * @return {JSX.Element} Formulario para la creación de un nuevo monstruo
+ */
 export default function CreateMonster() {
     const [formData, setFormData] = useState({
         name: '',
@@ -20,6 +27,13 @@ export default function CreateMonster() {
     const [error, setError] = useState(null);
     const router = useRouter();
 
+    /**
+     * Añade una nueva ubicación a la lista de ubicaciones comunes del monstruo.
+     * Solo se añade si el texto no está vacío después de eliminar espacios en blanco.
+     * 
+     * @function
+     * @return {void}
+     */
     const handleAddLocation = () => {
         if (newLocation.trim()) {
             setFormData(prev => ({
@@ -30,6 +44,13 @@ export default function CreateMonster() {
         }
     };
 
+    /**
+     * Elimina una ubicación específica de la lista de ubicaciones comunes.
+     * 
+     * @function
+     * @param {number} index - Índice de la ubicación a eliminar
+     * @return {void}
+     */
     const handleRemoveLocation = (index) => {
         setFormData(prev => ({
             ...prev,
@@ -37,6 +58,13 @@ export default function CreateMonster() {
         }));
     };
 
+    /**
+     * Añade un nuevo objeto a la lista de objetos que deja caer el monstruo.
+     * Solo se añade si el texto no está vacío después de eliminar espacios en blanco.
+     * 
+     * @function
+     * @return {void}
+     */
     const handleAddDrop = () => {
         if (newDrop.trim()) {
             setFormData(prev => ({
@@ -47,6 +75,13 @@ export default function CreateMonster() {
         }
     };
 
+    /**
+     * Elimina un objeto específico de la lista de objetos que deja caer el monstruo.
+     * 
+     * @function
+     * @param {number} index - Índice del objeto a eliminar
+     * @return {void}
+     */
     const handleRemoveDrop = (index) => {
         setFormData(prev => ({
             ...prev,
@@ -54,6 +89,14 @@ export default function CreateMonster() {
         }));
     };
 
+    /**
+     * Maneja los cambios en los campos del formulario.
+     * Actualiza el estado formData con los nuevos valores.
+     * 
+     * @function
+     * @param {React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>} e - Evento de cambio
+     * @return {void}
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -62,6 +105,16 @@ export default function CreateMonster() {
         }));
     };
 
+    /**
+     * Gestiona el envío del formulario.
+     * Valida los datos, los envía a la API y maneja errores y respuestas.
+     * En caso de éxito, redirige a la lista de monstruos.
+     * 
+     * @function
+     * @async
+     * @param {React.FormEvent<HTMLFormElement>} e - Evento de envío del formulario
+     * @return {Promise<void>}
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);

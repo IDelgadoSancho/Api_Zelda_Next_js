@@ -5,6 +5,24 @@ import Modal from "@/app/components/Modals/Monster/monster";
 import Delete from "@/app/components/Modals/Delete/delete";
 import Link from 'next/link';
 
+/**
+ * Componente para mostrar la información de un monstruo en forma de tarjeta.
+ * Permite visualizar detalles, editar y eliminar un monstruo.
+ * Incluye un modal para ver información detallada y otro para confirmar eliminación.
+ * 
+ * @component
+ * @param {Object} props - Propiedades del componente
+ * @param {Object} props.data - Datos del monstruo a mostrar
+ * @param {string} props.data.name - Nombre del monstruo
+ * @param {string} props.data.category - Categoría del monstruo
+ * @param {Array<string>} props.data.common_locations - Ubicaciones donde se encuentra el monstruo
+ * @param {string} props.data.description - Descripción detallada del monstruo
+ * @param {Array<string>} props.data.drops - Objetos que deja caer el monstruo
+ * @param {string} props.data.image - URL de la imagen del monstruo
+ * @param {string} props.data.id_num - Identificador único del monstruo
+ * @param {Function} [props.onDelete] - Función callback a ejecutar cuando se elimina el monstruo
+ * @return {JSX.Element} Tarjeta con información del monstruo
+ */
 export default function Card({ data, onDelete }) {
     const [showModal, setShowModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -21,6 +39,16 @@ export default function Card({ data, onDelete }) {
         id_num,
     } = data;
 
+    /**
+     * Maneja la eliminación de un monstruo mediante una petición a la API.
+     * Actualiza la interfaz de usuario después de la eliminación si es exitosa.
+     * Notifica errores y gestiona los estados de carga durante el proceso.
+     * 
+     * @async
+     * @function
+     * @throws {Error} Si la respuesta de la API no es exitosa
+     * @return {Promise<void>}
+     */
     const handleDelete = async () => {
         setIsDeleting(true);
 

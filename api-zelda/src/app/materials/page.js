@@ -7,15 +7,29 @@ import Link from 'next/link';
 import Alert from '../components/Alert/alert';
 import '../globals.css';
 
-
+/**
+ * Componente principal para la página de listado de materiales.
+ * Gestiona la carga de datos, estados de carga y visualización de materiales.
+ * Incluye una opción para añadir nuevos materiales.
+ * 
+ * @component
+ * @return {JSX.Element} Página de listado de materiales o mensajes de estado
+ */
 export default function Page() {
-
-    // return <Alert isLoading={true} />; // probar mensaje loading
 
     const [materials, setMaterials] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        /**
+         * Función asincrónica para obtener los datos de materiales desde la API.
+         * Realiza la petición, maneja errores y actualiza los estados correspondientes.
+         * 
+         * @async
+         * @function
+         * @throws {Error} Cuando la respuesta de la API no es exitosa
+         * @return {Promise<void>}
+         */
         async function fetchMaterials() {
             const endpoint = 'http://localhost:3001/materials';
 

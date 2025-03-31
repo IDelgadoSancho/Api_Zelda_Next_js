@@ -1,5 +1,16 @@
 'use client';
 
+/**
+ * Componente para editar un material existente en la base de datos.
+ * Permite modificar nombre, descripción, efecto al cocinar, recuperación de corazones
+ * y ubicaciones comunes del material.
+ * 
+ * @component
+ * @param {Object} props - Propiedades del componente
+ * @param {Object} props.params - Parámetros de la ruta
+ * @param {string} props.params.id - Identificador del material a editar
+ * @return {JSX.Element} Formulario de edición de material o mensajes de estado
+ */
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -20,6 +31,14 @@ export default function EditMaterialPage({ params }) {
     // obtener la id
     const { id } = params;
 
+    /**
+     * Obtiene los datos del material desde la API cuando el componente se monta.
+     * Actualiza el estado con la información obtenida o maneja los errores.
+     * 
+     * @function
+     * @async
+     * @throws {Error} Si no se puede cargar la información del material
+     */
     useEffect(() => {
         async function fetchMaterial() {
             try {
@@ -48,6 +67,13 @@ export default function EditMaterialPage({ params }) {
         fetchMaterial();
     }, [id]);
 
+    /**
+     * Actualiza el estado del formulario cuando cambian los valores de los campos.
+     * Utiliza el nombre del campo como clave para actualizar la propiedad correspondiente.
+     * 
+     * @function
+     * @param {React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>} e - Evento de cambio del campo
+     */
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -56,6 +82,13 @@ export default function EditMaterialPage({ params }) {
         }));
     };
 
+    /**
+     * Añade una nueva ubicación a la lista de ubicaciones comunes del material.
+     * Solo se añade si el texto no está vacío después de eliminar espacios en blanco.
+     * Después de añadir la ubicación, limpia el campo de texto.
+     * 
+     * @function
+     */
     const handleAddLocation = () => {
         if (newLocation.trim()) {
             setFormData(prev => ({
@@ -66,6 +99,13 @@ export default function EditMaterialPage({ params }) {
         }
     };
 
+    /**
+     * Elimina una ubicación específica de la lista de ubicaciones comunes.
+     * Filtra la ubicación en el índice proporcionado del array de ubicaciones.
+     * 
+     * @function
+     * @param {number} index - Índice de la ubicación a eliminar
+     */
     const handleRemoveLocation = (index) => {
         setFormData(prev => ({
             ...prev,
@@ -73,6 +113,15 @@ export default function EditMaterialPage({ params }) {
         }));
     };
 
+    /**
+     * Maneja el envío del formulario, actualizando los datos del material en la API.
+     * En caso de éxito, redirige al usuario a la lista de materiales.
+     * 
+     * @function
+     * @async
+     * @param {React.FormEvent<HTMLFormElement>} e - Evento de envío del formulario
+     * @throws {Error} Si no se puede actualizar el material en la API
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
 

@@ -1,5 +1,18 @@
 "use client";
 
+/**
+ * Componente modal para confirmar la eliminación de elementos.
+ * Muestra un diálogo de confirmación con opciones para cancelar o confirmar la acción.
+ * Incluye un icono de advertencia y mensaje personalizado con el nombre del elemento.
+ * 
+ * @component
+ * @param {Object} props - Propiedades del componente
+ * @param {boolean} props.isOpen - Determina si el modal está abierto o cerrado
+ * @param {Function} props.onClose - Función a ejecutar cuando se cierra el modal
+ * @param {Function} props.onConfirm - Función a ejecutar cuando se confirma la eliminación
+ * @param {string} props.itemName - Nombre del elemento que se va a eliminar
+ * @return {JSX.Element|null} Diálogo de confirmación o null si el modal está cerrado
+ */
 export default function Delete({ isOpen, onClose, onConfirm, itemName }) {
     if (!isOpen) return null;
 

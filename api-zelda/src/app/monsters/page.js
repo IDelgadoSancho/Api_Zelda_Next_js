@@ -8,11 +8,27 @@ import Alert from '../components/Alert/alert';
 
 import '../globals.css';
 
+/**
+ * Componente principal para la página de listado de monstruos.
+ * Gestiona la carga de datos, estados de carga y visualización de monstruos.
+ * 
+ * @component
+ * @return {JSX.Element} Página de listado de monstruos o mensajes de estado
+ */
 export default function Page() {
     const [monsters, setMonsters] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        /**
+         * Función asincrónica para obtener los datos de monstruos desde la API.
+         * Realiza la petición, maneja errores y actualiza los estados correspondientes.
+         * 
+         * @async
+         * @function
+         * @throws {Error} Cuando la respuesta de la API no es exitosa
+         * @return {Promise<void>}
+         */
         async function fetchMonsters() {
             const endpoint = 'http://localhost:3001/monsters';
 
