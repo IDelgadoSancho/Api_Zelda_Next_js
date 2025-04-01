@@ -9,6 +9,7 @@ export default function Modal({ data, onClose }) {
         description,
         hearts_recovered,
         image,
+        id_num,
     } = data;
 
     return (
@@ -19,7 +20,7 @@ export default function Modal({ data, onClose }) {
 
                 {/* header del modal */}
                 <div className="flex justify-between items-center border-b border-[#CE9C39] p-4">
-                    <h2 className="text-2xl font-bold text-[#CE9C39]">{name}</h2>
+                    <h2 className="text-2xl font-bold text-[#CE9C39]">{`${name} : ${id_num}`}</h2>
                     <button
                         onClick={onClose}
                         className="text-[#CE9C39] hover:text-[#b8a070] focus:outline-none"

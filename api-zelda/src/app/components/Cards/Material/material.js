@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { io } from 'socket.io-client';
 import css from './material.module.css';
 import Modal from "@/app/components/Modals/Material/material";
 import Delete from "@/app/components/Modals/Delete/delete";
@@ -28,6 +29,9 @@ export default function Card({ data, onDelete }) {
     const [showModal, setShowModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [voteCount, setVoteCount] = useState(0);
+    const [isVoting, setIsVoting] = useState(false);
+    const [voteMessage, setVoteMessage] = useState('');
     const router = useRouter();
 
     const {
@@ -40,6 +44,51 @@ export default function Card({ data, onDelete }) {
         image,
         id_num,
     } = data;
+
+    // Conectar al servidor de WebSocket cuando el componente se monta
+    useEffect(() => {
+        const socket = io("http://localhost:3001");
+
+        socket.on("connect", () => {
+            console.log("Conectado a WebSocket");
+        });
+
+        // Escuchar actualizaciones de votos para este material específico
+        socket.on("vote:update", ({ id_num: updatedId, total }) => {
+            console.log(`WebSocket recibió actualización: item=${updatedId}, total=${total}`);
+            if (parseInt(updatedId) === parseInt(id_num)) {
+                console.log(`Actualizando voto para ${name} a ${total}`);
+                setVoteCount(total);
+            }
+        });
+
+        return () => {
+            socket.disconnect(); // Limpiar la conexión cuando el componente se desmonta
+        };
+    }, [id_num, name]);
+
+    // Cargar el recuento inicial de votos cuando el componente se monta
+    useEffect(() => {
+        const fetchVoteCount = async () => {
+            try {
+                const response = await fetch("http://localhost:3001/votes");
+                if (response.ok) {
+                    const allVotes = await response.json();
+                    // Buscar el voto correspondiente al material actual
+                    const materialVote = allVotes.find(vote => parseInt(vote.id_num) === parseInt(id_num));
+                    // Actualizar el contador si se encuentra
+                    if (materialVote) {
+                        console.log(`Cargando votos iniciales para ${name}: ${materialVote.total}`);
+                        setVoteCount(materialVote.total);
+                    }
+                }
+            } catch (error) {
+                console.error("Error al cargar votos:", error);
+            }
+        };
+
+        fetchVoteCount();
+    }, [id_num, name]);
 
     /**
      * Maneja la eliminación de un material mediante una petición a la API.
@@ -79,6 +128,45 @@ export default function Card({ data, onDelete }) {
         }
     };
 
+    /**
+     * Maneja el envío de un voto para el material actual.
+     * Envía una petición POST al servidor y actualiza el estado según la respuesta.
+     * 
+     * @async
+     * @function
+     * @return {Promise<void>}
+     */
+    const handleVote = async () => {
+        setIsVoting(true);
+        setVoteMessage('');
+
+        const voteData = {
+            id_num: parseInt(id_num),
+            user_id: crypto.randomUUID(),
+            value: 1
+        };
+
+        try {
+            const response = await fetch("http://localhost:3001/votes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(voteData),
+            });
+
+            if (response.ok) {
+                setVoteMessage("Voto correcto!");
+                // setVoteCount(prevCount => prevCount + 1);
+            } else {
+                setVoteMessage("Error en el voto");
+            }
+        } catch (error) {
+            console.error("Error al votar:", error);
+            setVoteMessage("Error de conexión");
+        } finally {
+            setIsVoting(false);
+        }
+    };
+
     return (
         <div className={`relative flex flex-col my-6 shadow-sm border-3 rounded-lg w-96 ${css.card}`}>
             <div className="relative h-56 m-2.5 overflow-hidden text-white rounded-md">
@@ -96,7 +184,7 @@ export default function Card({ data, onDelete }) {
 
             <div className="p-4" id="editar">
                 <h6 className="mb-2 text-xl font-semibold">
-                    {name.toUpperCase()}
+                    {`${name.toUpperCase()}`}
                 </h6>
                 <p className={`leading-normal font-light mb-2 ${css.description}`}>
                     {description}
@@ -126,14 +214,31 @@ export default function Card({ data, onDelete }) {
                         </div>
                     )}
                 </div>
-                {
-                    common_locations && common_locations.length > 0 && (
-                        <p className={`text-sm ${css.description}`}>
-                            <strong>Ubicaciones comunes:</strong> {common_locations.join(", ")}
-                        </p>
-                    )
-                }
-            </div >
+                {common_locations && common_locations.length > 0 && (
+                    <p className={`text-sm ${css.description}`}>
+                        <strong>Ubicaciones comunes:</strong> {common_locations.join(", ")}
+                    </p>
+                )}
+
+                {/* Sistema de votos */}
+                <div className="mt-3 flex items-center">
+                    <div className="mr-4">
+                        <strong>Votos:</strong> <span className="text-[#CE9C39] font-bold">{voteCount}</span>
+                    </div>
+                    <button
+                        onClick={handleVote}
+                        disabled={isVoting}
+                        className="px-3 py-1 bg-[#CE9C39] text-[#2A201F] rounded hover:bg-[#ac8230] transition-colors"
+                    >
+                        {isVoting ? 'Votando...' : 'Votar'}
+                    </button>
+                </div>
+                {voteMessage && (
+                    <p className="text-sm mt-1">
+                        {voteMessage}
+                    </p>
+                )}
+            </div>
 
             <div className='flex flex-row justify-between'>
                 <div className="px-4 pb-4 pt-0 mt-2">
@@ -163,6 +268,6 @@ export default function Card({ data, onDelete }) {
                 onConfirm={handleDelete}
                 itemName={name}
             />
-        </div >
+        </div>
     );
 }
