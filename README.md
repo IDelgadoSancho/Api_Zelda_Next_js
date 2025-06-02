@@ -26,7 +26,7 @@ A modern web application built with Next.js that provides an interactive interfa
 ### Installation
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/Api_Zelda_Next_js.git
+git clone https://github.com/IDelgadoSancho/Api_Zelda_Next_js.git
 cd Api_Zelda_Next_js/api-zelda
 ```
 
